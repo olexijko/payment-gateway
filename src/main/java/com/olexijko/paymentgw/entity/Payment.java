@@ -30,7 +30,7 @@ public class Payment {
     @Column(unique = true)
     private String invoice;
 
-    private double amount;
+    private Double amount;
 
     private String currency;
 

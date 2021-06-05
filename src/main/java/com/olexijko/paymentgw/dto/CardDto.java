@@ -1,6 +1,10 @@
 package com.olexijko.paymentgw.dto;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.olexijko.paymentgw.validator.ValidExpiryDate;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +20,12 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @AllArgsConstructor
 @JsonInclude(NON_NULL)
 public class CardDto {
+    @NotBlank(message = "PAN is required.")
     private String pan;
+
+    @ValidExpiryDate
     private String expiry;
+
+    @NotBlank(message = "CVV is required.")
     private String cvv;
 }
