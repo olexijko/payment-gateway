@@ -7,6 +7,8 @@ import javax.validation.constraints.NotBlank;
 
 import com.olexijko.paymentgw.dto.PaymentDto;
 import com.olexijko.paymentgw.dto.PaymentProcessingResponseDto;
+import com.olexijko.paymentgw.exception.DuplicatePaymentException;
+import com.olexijko.paymentgw.exception.PaymentNotFoundException;
 import com.olexijko.paymentgw.service.PaymentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.FieldError;
@@ -55,5 +57,17 @@ public class PaymentController {
             errors.put(fieldName, errorMessage);
         });
         return PaymentProcessingResponseDto.failed(errors);
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(PaymentNotFoundException.class)
+    public PaymentProcessingResponseDto handlePaymentNotFoundException(PaymentNotFoundException e) {
+        return PaymentProcessingResponseDto.failed(e.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.CONFLICT)
+    @ExceptionHandler(DuplicatePaymentException.class)
+    public PaymentProcessingResponseDto handleDuplicatePaymentException(DuplicatePaymentException e) {
+        return PaymentProcessingResponseDto.failed(e.getMessage());
     }
 }

@@ -12,6 +12,7 @@ import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 @Setter
 @JsonInclude(NON_NULL)
 public class PaymentProcessingResponseDto {
+    public static final String GENERIC_ERROR_KEY = "error";
     private final boolean isApproved;
     private final Map<String, String> errors;
 
@@ -26,5 +27,9 @@ public class PaymentProcessingResponseDto {
 
     public static PaymentProcessingResponseDto failed(Map<String, String> errors) {
         return new PaymentProcessingResponseDto(false, errors);
+    }
+
+    public static PaymentProcessingResponseDto failed(String errorMessage) {
+        return new PaymentProcessingResponseDto(false, Map.of(GENERIC_ERROR_KEY, errorMessage));
     }
 }
