@@ -6,7 +6,7 @@ import com.olexijko.paymentgw.dto.PaymentDto;
 import com.olexijko.paymentgw.entity.Card;
 import com.olexijko.paymentgw.entity.Cardholder;
 import com.olexijko.paymentgw.entity.Payment;
-    import com.olexijko.paymentgw.service.Encryptor;
+import com.olexijko.paymentgw.service.Encryptor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +24,7 @@ public class PaymentMapper {
     public Payment toEntityFromDto(PaymentDto dto) {
         return dto == null ? null : Payment.builder()
                 .invoice(dto.getInvoice())
-                .amount(dto.getAmount())
+                .amount(Integer.valueOf(dto.getAmount()))
                 .currency(dto.getCurrency())
                 .card(toCardEntityFromDto(dto.getCard()))
                 .cardholder(toCardholderEntityFromDto(dto.getCardholder()))
@@ -34,7 +34,7 @@ public class PaymentMapper {
     public PaymentDto toDtoFromEntity(Payment entity) {
         return entity == null ? null : PaymentDto.builder()
                 .invoice(entity.getInvoice())
-                .amount(entity.getAmount())
+                .amount(String.valueOf(entity.getAmount()))
                 .currency(entity.getCurrency())
                 .card(toCardDtoFromEntity(entity.getCard()))
                 .cardholder(toCardholderDtoFromEntity(entity.getCardholder()))

@@ -3,7 +3,6 @@ package com.olexijko.paymentgw.validator;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
@@ -20,7 +19,7 @@ public class ExpiryDateIsNotExpired implements ConstraintValidator<ValidExpiryDa
         try {
             final LocalDate expiryDate = YearMonth.parse(expiryDateStr, DateTimeFormatter.ofPattern(EXPIRY_DATE_FORMAT)).atEndOfMonth();
             return !expiryDate.isBefore(LocalDate.now());
-        } catch (DateTimeParseException e) {
+        } catch (Exception e) {
             //skip this validation in case input value is not understandable.
             return true;
         }

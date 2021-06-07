@@ -3,7 +3,7 @@ package com.olexijko.paymentgw.dto;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.Pattern;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
@@ -25,8 +25,8 @@ public class PaymentDto {
     private String invoice;
 
     @NotNull(message = "Amount is required.")
-    @Positive(message = "Amount should have a positive value.")
-    private Double amount;
+    @Pattern(regexp = "^[0-9]*[1-9]+$", message = "Amount is invalid.")
+    private String amount;
 
     @NotBlank(message = "Currency is required.")
     private String currency;
