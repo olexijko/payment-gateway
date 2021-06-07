@@ -19,7 +19,6 @@ public class ExpiryDateIsNotExpired implements ConstraintValidator<ValidExpiryDa
     public boolean isValid(String expiryDateStr, ConstraintValidatorContext context) {
         try {
             final LocalDate expiryDate = YearMonth.parse(expiryDateStr, DateTimeFormatter.ofPattern(EXPIRY_DATE_FORMAT)).atEndOfMonth();
-            System.out.println(expiryDate);
             return !expiryDate.isBefore(LocalDate.now());
         } catch (DateTimeParseException e) {
             //skip this validation in case input value is not understandable.
