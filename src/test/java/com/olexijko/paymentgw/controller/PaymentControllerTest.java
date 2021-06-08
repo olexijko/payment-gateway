@@ -18,6 +18,19 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import static com.olexijko.paymentgw.PayloadFactory.CARD_PAN_INVALID_LUHN_CHECK;
+import static com.olexijko.paymentgw.PayloadFactory.EXPIRED_CARD_EXPIRY_DATE;
+import static com.olexijko.paymentgw.PayloadFactory.SANITISED_CARDHOLDER_NAME;
+import static com.olexijko.paymentgw.PayloadFactory.SANITISED_CARD_EXPIRY_DATE;
+import static com.olexijko.paymentgw.PayloadFactory.SANITISED_CARD_PAN;
+import static com.olexijko.paymentgw.PayloadFactory.VALID_AMOUNT;
+import static com.olexijko.paymentgw.PayloadFactory.VALID_CARDHOLDER_EMAIL;
+import static com.olexijko.paymentgw.PayloadFactory.VALID_CARDHOLDER_NAME;
+import static com.olexijko.paymentgw.PayloadFactory.VALID_CARD_CVV;
+import static com.olexijko.paymentgw.PayloadFactory.VALID_CARD_EXPIRY_DATE;
+import static com.olexijko.paymentgw.PayloadFactory.VALID_CARD_PAN;
+import static com.olexijko.paymentgw.PayloadFactory.VALID_CURRENCY;
+import static com.olexijko.paymentgw.PayloadFactory.VALID_INVOICE;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -42,16 +55,16 @@ class PaymentControllerTest {
         Mockito.when(paymentServiceMock.processPayment(ArgumentMatchers.any())).thenReturn(PaymentProcessingResultDto.success());
 
         final Map<String, Object> requestBody = Map.of(
-                "invoice", 1234567,
-                "amount", 1299,
-                "currency", "EUR",
+                "invoice", VALID_INVOICE,
+                "amount", VALID_AMOUNT,
+                "currency", VALID_CURRENCY,
                 "cardholder", Map.of(
-                        "name", "First Last",
-                        "email", "email@domain.com"),
+                        "name", VALID_CARDHOLDER_NAME,
+                        "email", VALID_CARDHOLDER_EMAIL),
                 "card", Map.of(
-                        "pan", "4532011283777270",
-                        "expiry", "0624",
-                        "cvv", "789")
+                        "pan", VALID_CARD_PAN,
+                        "expiry", VALID_CARD_EXPIRY_DATE,
+                        "cvv", VALID_CARD_CVV)
 
         );
         final RequestBuilder request = post(PAYMENT_CONTROLLER_BASE_PATH).
@@ -86,16 +99,16 @@ class PaymentControllerTest {
     @Test
     void processNewPayment_ReturnsBadRequest_WhenPaymentAmountHasNonNumericSymbols() throws Exception {
         final Map<String, Object> requestBody = Map.of(
-                "invoice", 1234567,
+                "invoice", VALID_INVOICE,
                 "amount", "1299a",
-                "currency", "EUR",
+                "currency", VALID_CURRENCY,
                 "cardholder", Map.of(
-                        "name", "First Last",
-                        "email", "email@domain.com"),
+                        "name", VALID_CARDHOLDER_NAME,
+                        "email", VALID_CARDHOLDER_EMAIL),
                 "card", Map.of(
-                        "pan", "4532011283777270",
-                        "expiry", "0624",
-                        "cvv", "789")
+                        "pan", VALID_CARD_PAN,
+                        "expiry", VALID_CARD_EXPIRY_DATE,
+                        "cvv", VALID_CARD_CVV)
 
         );
         final RequestBuilder request = post(PAYMENT_CONTROLLER_BASE_PATH).
@@ -113,16 +126,16 @@ class PaymentControllerTest {
     @Test
     void processNewPayment_ReturnsBadRequest_WhenPaymentAmountIsNegative() throws Exception {
         final Map<String, Object> requestBody = Map.of(
-                "invoice", 1234567,
+                "invoice", VALID_INVOICE,
                 "amount", -1299,
-                "currency", "EUR",
+                "currency", VALID_CURRENCY,
                 "cardholder", Map.of(
-                        "name", "First Last",
-                        "email", "email@domain.com"),
+                        "name", VALID_CARDHOLDER_NAME,
+                        "email", VALID_CARDHOLDER_EMAIL),
                 "card", Map.of(
-                        "pan", "4532011283777270",
-                        "expiry", "0624",
-                        "cvv", "789")
+                        "pan", VALID_CARD_PAN,
+                        "expiry", VALID_CARD_EXPIRY_DATE,
+                        "cvv", VALID_CARD_CVV)
 
         );
         final RequestBuilder request = post(PAYMENT_CONTROLLER_BASE_PATH).
@@ -140,16 +153,16 @@ class PaymentControllerTest {
     @Test
     void processNewPayment_ReturnsBadRequest_WhenPaymentAmountIsZero() throws Exception {
         final Map<String, Object> requestBody = Map.of(
-                "invoice", 1234567,
+                "invoice", VALID_INVOICE,
                 "amount", 0,
-                "currency", "EUR",
+                "currency", VALID_CURRENCY,
                 "cardholder", Map.of(
-                        "name", "First Last",
-                        "email", "email@domain.com"),
+                        "name", VALID_CARDHOLDER_NAME,
+                        "email", VALID_CARDHOLDER_EMAIL),
                 "card", Map.of(
-                        "pan", "4532011283777270",
-                        "expiry", "0624",
-                        "cvv", "789")
+                        "pan", VALID_CARD_PAN,
+                        "expiry", VALID_CARD_EXPIRY_DATE,
+                        "cvv", VALID_CARD_CVV)
 
         );
         final RequestBuilder request = post(PAYMENT_CONTROLLER_BASE_PATH).
@@ -165,16 +178,16 @@ class PaymentControllerTest {
     }
 
     @Test
-    void processNewPayment_ReturnsBadRequest_WhenMandatoryCardFieldsAreEmpty() throws Exception {
+    void processNewPayment_ReturnsBadRequest_WhenMandatoryCardholderFieldsAreEmpty() throws Exception {
         final Map<String, Object> requestBody = Map.of(
-                "invoice", 1234567,
-                "amount", 1299,
-                "currency", "EUR",
+                "invoice", VALID_INVOICE,
+                "amount", VALID_AMOUNT,
+                "currency", VALID_CURRENCY,
                 "cardholder", Map.of(),
                 "card", Map.of(
-                        "pan", "4532011283777270",
-                        "expiry", "0624",
-                        "cvv", "789")
+                        "pan", VALID_CARD_PAN,
+                        "expiry", VALID_CARD_EXPIRY_DATE,
+                        "cvv", VALID_CARD_CVV)
 
         );
         final RequestBuilder request = post(PAYMENT_CONTROLLER_BASE_PATH).
@@ -191,16 +204,16 @@ class PaymentControllerTest {
     @Test
     void processNewPayment_ReturnsBadRequest_WhenCardholderEmailIsInvalid() throws Exception {
         final Map<String, Object> requestBody = Map.of(
-                "invoice", 1234567,
-                "amount", 1299,
-                "currency", "EUR",
+                "invoice", VALID_INVOICE,
+                "amount", VALID_AMOUNT,
+                "currency", VALID_CURRENCY,
                 "cardholder", Map.of(
-                        "name", "First Last",
+                        "name", VALID_CARDHOLDER_NAME,
                         "email", "invalid.email"),
                 "card", Map.of(
-                        "pan", "4532011283777270",
-                        "expiry", "0624",
-                        "cvv", "789")
+                        "pan", VALID_CARD_PAN,
+                        "expiry", VALID_CARD_EXPIRY_DATE,
+                        "cvv", VALID_CARD_CVV)
 
         );
         final RequestBuilder request = post(PAYMENT_CONTROLLER_BASE_PATH).
@@ -216,16 +229,16 @@ class PaymentControllerTest {
     @Test
     void processNewPayment_ReturnsBadRequest_WhenCardPanHasNonNumericSymbols() throws Exception {
         final Map<String, Object> requestBody = Map.of(
-                "invoice", 1234567,
-                "amount", 1299,
-                "currency", "EUR",
+                "invoice", VALID_INVOICE,
+                "amount", VALID_AMOUNT,
+                "currency", VALID_CURRENCY,
                 "cardholder", Map.of(
-                        "name", "First Last",
-                        "email", "email@domain.com"),
+                        "name", VALID_CARDHOLDER_NAME,
+                        "email", VALID_CARDHOLDER_EMAIL),
                 "card", Map.of(
-                        "pan", "a53201a28377727a",
-                        "expiry", "0624",
-                        "cvv", "789")
+                        "pan", "4532011b8377727a",
+                        "expiry", VALID_CARD_EXPIRY_DATE,
+                        "cvv", VALID_CARD_CVV)
 
         );
         final RequestBuilder request = post(PAYMENT_CONTROLLER_BASE_PATH).
@@ -241,16 +254,16 @@ class PaymentControllerTest {
     @Test
     void processNewPayment_ReturnsBadRequest_WhenCardPanLuhnCheckIsFailed() throws Exception {
         final Map<String, Object> requestBody = Map.of(
-                "invoice", 1234567,
-                "amount", 1299,
-                "currency", "EUR",
+                "invoice", VALID_INVOICE,
+                "amount", VALID_AMOUNT,
+                "currency", VALID_CURRENCY,
                 "cardholder", Map.of(
-                        "name", "First Last",
-                        "email", "email@domain.com"),
+                        "name", VALID_CARDHOLDER_NAME,
+                        "email", VALID_CARDHOLDER_EMAIL),
                 "card", Map.of(
-                        "pan", "4200000000000001",
-                        "expiry", "0624",
-                        "cvv", "789")
+                        "pan", CARD_PAN_INVALID_LUHN_CHECK,
+                        "expiry", VALID_CARD_EXPIRY_DATE,
+                        "cvv", VALID_CARD_CVV)
 
         );
         final RequestBuilder request = post(PAYMENT_CONTROLLER_BASE_PATH).
@@ -266,16 +279,16 @@ class PaymentControllerTest {
     @Test
     void processNewPayment_ReturnsBadRequest_WhenCardIsExpired() throws Exception {
         final Map<String, Object> requestBody = Map.of(
-                "invoice", 1234567,
-                "amount", 1299,
-                "currency", "EUR",
+                "invoice", VALID_INVOICE,
+                "amount", VALID_AMOUNT,
+                "currency", VALID_CURRENCY,
                 "cardholder", Map.of(
-                        "name", "First Last",
-                        "email", "email@domain.com"),
+                        "name", VALID_CARDHOLDER_NAME,
+                        "email", VALID_CARDHOLDER_EMAIL),
                 "card", Map.of(
-                        "pan", "4532011283777270",
-                        "expiry", "0619",
-                        "cvv", "789")
+                        "pan", VALID_CARD_PAN,
+                        "expiry", EXPIRED_CARD_EXPIRY_DATE,
+                        "cvv", VALID_CARD_CVV)
 
         );
         final RequestBuilder request = post(PAYMENT_CONTROLLER_BASE_PATH).
@@ -291,16 +304,16 @@ class PaymentControllerTest {
     @Test
     void processNewPayment_ReturnsBadRequest_WhenCardExpiryIsInvalidDate() throws Exception {
         final Map<String, Object> requestBody = Map.of(
-                "invoice", 1234567,
-                "amount", 1299,
-                "currency", "EUR",
+                "invoice", VALID_INVOICE,
+                "amount", VALID_AMOUNT,
+                "currency", VALID_CURRENCY,
                 "cardholder", Map.of(
-                        "name", "First Last",
-                        "email", "email@domain.com"),
+                        "name", VALID_CARDHOLDER_NAME,
+                        "email", VALID_CARDHOLDER_EMAIL),
                 "card", Map.of(
-                        "pan", "4532011283777270",
+                        "pan", VALID_CARD_PAN,
                         "expiry", "1321",
-                        "cvv", "789")
+                        "cvv", VALID_CARD_CVV)
 
         );
         final RequestBuilder request = post(PAYMENT_CONTROLLER_BASE_PATH).
@@ -314,14 +327,14 @@ class PaymentControllerTest {
     }
 
     @Test
-    void processNewPayment_ReturnsBadRequest_WhenMandatoryCardholderFieldsAreEmpty() throws Exception {
+    void processNewPayment_ReturnsBadRequest_WhenMandatoryCardFieldsAreEmpty() throws Exception {
         final Map<String, Object> requestBody = Map.of(
-                "invoice", 1234567,
-                "amount", 1299,
-                "currency", "EUR",
+                "invoice", VALID_INVOICE,
+                "amount", VALID_AMOUNT,
+                "currency", VALID_CURRENCY,
                 "cardholder", Map.of(
-                        "name", "First Last",
-                        "email", "email@domain.com"),
+                        "name", VALID_CARDHOLDER_NAME,
+                        "email", VALID_CARDHOLDER_EMAIL),
                 "card", Map.of()
 
         );
@@ -340,11 +353,11 @@ class PaymentControllerTest {
     @Test
     void getPaymentByInvoiceNumber_ReturnsFoundPayment_WhenValidInvoiceIsSent() throws Exception {
         final PaymentDto foundPayment = PaymentDto.builder()
-                .invoice("12345")
-                .amount("1299")
-                .currency("USD")
-                .cardholder(CardholderDto.builder().email("email@domain.com").name("**********").build())
-                .card(CardDto.builder().expiry("****").pan("************0001").build())
+                .invoice(VALID_INVOICE)
+                .amount(VALID_AMOUNT)
+                .currency(VALID_CURRENCY)
+                .cardholder(CardholderDto.builder().email(VALID_CARDHOLDER_EMAIL).name(SANITISED_CARDHOLDER_NAME).build())
+                .card(CardDto.builder().expiry(SANITISED_CARD_EXPIRY_DATE).pan(SANITISED_CARD_PAN).build())
                 .build();
         final String invoice = foundPayment.getInvoice();
         Mockito.when(paymentServiceMock.findPaymentByInvoice(invoice)).thenReturn(foundPayment);

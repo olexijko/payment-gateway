@@ -19,14 +19,14 @@ import org.mockito.ArgumentMatchers;
 
 import static com.olexijko.paymentgw.PayloadFactory.SANITISED_CARDHOLDER_NAME;
 import static com.olexijko.paymentgw.PayloadFactory.SANITISED_CARD_PAN;
-import static com.olexijko.paymentgw.PayloadFactory.SANITISED_EXPIRY_DATE;
+import static com.olexijko.paymentgw.PayloadFactory.SANITISED_CARD_EXPIRY_DATE;
 import static com.olexijko.paymentgw.PayloadFactory.VALID_AMOUNT;
 import static com.olexijko.paymentgw.PayloadFactory.VALID_CARDHOLDER_EMAIL;
 import static com.olexijko.paymentgw.PayloadFactory.VALID_CARDHOLDER_NAME;
 import static com.olexijko.paymentgw.PayloadFactory.VALID_CARD_PAN;
 import static com.olexijko.paymentgw.PayloadFactory.VALID_CURRENCY;
-import static com.olexijko.paymentgw.PayloadFactory.VALID_CVV;
-import static com.olexijko.paymentgw.PayloadFactory.VALID_EXPIRY_DATE;
+import static com.olexijko.paymentgw.PayloadFactory.VALID_CARD_CVV;
+import static com.olexijko.paymentgw.PayloadFactory.VALID_CARD_EXPIRY_DATE;
 import static com.olexijko.paymentgw.PayloadFactory.VALID_INVOICE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -53,7 +53,7 @@ class PaymentServiceTest {
                 .amount(VALID_AMOUNT)
                 .currency(VALID_CURRENCY)
                 .cardholder(CardholderDto.builder().email(VALID_CARDHOLDER_EMAIL).name(VALID_CARDHOLDER_NAME).build())
-                .card(CardDto.builder().expiry(VALID_EXPIRY_DATE).pan(VALID_CARD_PAN).cvv(VALID_CVV).build())
+                .card(CardDto.builder().expiry(VALID_CARD_EXPIRY_DATE).pan(VALID_CARD_PAN).cvv(VALID_CARD_CVV).build())
                 .build();
         when(paymentRepositoryMock.findByInvoice(inputPaymentDto.getInvoice())).thenReturn(Optional.empty());
         when(paymentRepositoryMock.save(ArgumentMatchers.any())).then(invocationOnMock -> invocationOnMock.getArgument(0));
@@ -85,7 +85,7 @@ class PaymentServiceTest {
                 .amount(VALID_AMOUNT)
                 .currency(VALID_CURRENCY)
                 .cardholder(CardholderDto.builder().email(VALID_CARDHOLDER_EMAIL).name(VALID_CARDHOLDER_NAME).build())
-                .card(CardDto.builder().expiry(VALID_EXPIRY_DATE).pan(VALID_CARD_PAN).cvv(VALID_CVV).build())
+                .card(CardDto.builder().expiry(VALID_CARD_EXPIRY_DATE).pan(VALID_CARD_PAN).cvv(VALID_CARD_CVV).build())
                 .build();
         when(paymentRepositoryMock.findByInvoice(inputPaymentDto.getInvoice())).thenReturn(Optional.of(new Payment()));
 
@@ -103,7 +103,7 @@ class PaymentServiceTest {
                 .invoice(invoice)
                 .amount(Integer.valueOf(VALID_AMOUNT))
                 .currency(VALID_CURRENCY)
-                .card(Card.builder().expiryDate(encryptor.encrypt(VALID_EXPIRY_DATE)).pan(encryptor.encrypt(VALID_CARD_PAN)).build())
+                .card(Card.builder().expiryDate(encryptor.encrypt(VALID_CARD_EXPIRY_DATE)).pan(encryptor.encrypt(VALID_CARD_PAN)).build())
                 .cardholder(Cardholder.builder().name(encryptor.encrypt(VALID_CARDHOLDER_NAME)).email(VALID_CARDHOLDER_EMAIL).build())
                 .build();
         when(paymentRepositoryMock.findByInvoice(invoice)).thenReturn(Optional.of(paymentFromRepository));
@@ -131,7 +131,7 @@ class PaymentServiceTest {
         assertEquals(paymentFromRepository.getCurrency(), foundPaymentDto.getCurrency());
         assertNotNull(foundPaymentDto.getCard());
         assertEquals(SANITISED_CARD_PAN, foundPaymentDto.getCard().getPan());
-        assertEquals(SANITISED_EXPIRY_DATE, foundPaymentDto.getCard().getExpiry());
+        assertEquals(SANITISED_CARD_EXPIRY_DATE, foundPaymentDto.getCard().getExpiry());
         assertNotNull(foundPaymentDto.getCardholder());
         assertEquals(SANITISED_CARDHOLDER_NAME, foundPaymentDto.getCardholder().getName());
         assertEquals(paymentFromRepository.getCardholder().getEmail(), foundPaymentDto.getCardholder().getEmail());
@@ -155,7 +155,7 @@ class PaymentServiceTest {
         assertEquals(inputPaymentDto.getCurrency(), sentToAuditPaymentDto.getCurrency());
         assertNotNull(sentToAuditPaymentDto.getCard());
         assertEquals(SANITISED_CARD_PAN, sentToAuditPaymentDto.getCard().getPan());
-        assertEquals(SANITISED_EXPIRY_DATE, sentToAuditPaymentDto.getCard().getExpiry());
+        assertEquals(SANITISED_CARD_EXPIRY_DATE, sentToAuditPaymentDto.getCard().getExpiry());
         assertNotNull(sentToAuditPaymentDto.getCardholder());
         assertEquals(SANITISED_CARDHOLDER_NAME, sentToAuditPaymentDto.getCardholder().getName());
         assertEquals(inputPaymentDto.getCardholder().getEmail(), sentToAuditPaymentDto.getCardholder().getEmail());

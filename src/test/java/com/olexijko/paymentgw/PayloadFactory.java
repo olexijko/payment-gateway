@@ -12,10 +12,10 @@ public class PayloadFactory {
     public static final String VALID_CARD_PAN = "4532011283777270";
     public static final String SANITISED_CARD_PAN = "************7270";
     public static final String CARD_PAN_INVALID_LUHN_CHECK = "4200000000000001";
-    public static final String VALID_EXPIRY_DATE = LocalDate.now().plus(1, ChronoUnit.YEARS).format(DateTimeFormatter.ofPattern("MMyy"));
-    public static final String EXPIRED_EXPIRY_DATE = LocalDate.now().minus(1, ChronoUnit.YEARS).format(DateTimeFormatter.ofPattern("MMyy"));
-    public static final String SANITISED_EXPIRY_DATE = "****";
-    public static final String VALID_CVV = "123";
+    public static final String VALID_CARD_EXPIRY_DATE = LocalDate.now().plus(1, ChronoUnit.YEARS).format(DateTimeFormatter.ofPattern("MMyy"));
+    public static final String EXPIRED_CARD_EXPIRY_DATE = LocalDate.now().minus(1, ChronoUnit.YEARS).format(DateTimeFormatter.ofPattern("MMyy"));
+    public static final String SANITISED_CARD_EXPIRY_DATE = "****";
+    public static final String VALID_CARD_CVV = "123";
 
     public static final String VALID_CARDHOLDER_NAME = "First Last";
     public static final String VALID_CARDHOLDER_EMAIL = "email@domain.com";
