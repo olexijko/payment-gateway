@@ -385,7 +385,7 @@ class PaymentControllerTest {
         this.mockMvc.perform(get(PAYMENT_CONTROLLER_BASE_PATH + "/" + notExistingInvoice))
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(status().isNotFound()).andExpect(content().contentType(APPLICATION_JSON))
-                .andExpect(jsonPath("$.errors.error").value(message));
+                .andExpect(jsonPath("$.errorMessage").value(message));
         Mockito.verify(paymentServiceMock).findPaymentByInvoice(notExistingInvoice);
     }
 

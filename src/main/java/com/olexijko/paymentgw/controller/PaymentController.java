@@ -5,6 +5,10 @@ import java.util.Map;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
+import com.olexijko.paymentgw.controller.documentation.DocGetPaymentByInvoice;
+import com.olexijko.paymentgw.controller.documentation.DocPaymentController;
+import com.olexijko.paymentgw.controller.documentation.DocProcessNewPayment;
+import com.olexijko.paymentgw.dto.ApiErrorResponseDto;
 import com.olexijko.paymentgw.dto.PaymentDto;
 import com.olexijko.paymentgw.dto.PaymentProcessingResultDto;
 import com.olexijko.paymentgw.exception.DuplicatePaymentException;
@@ -27,6 +31,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
 @RequestMapping(BASE_PATH)
+@DocPaymentController
 public class PaymentController {
     static final String BASE_PATH = "/api/v1/payments";
 
@@ -36,11 +41,13 @@ public class PaymentController {
         this.paymentService = paymentService;
     }
 
+    @DocProcessNewPayment
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
     public PaymentProcessingResultDto processNewPayment(@RequestBody @Valid PaymentDto paymentDto) {
         return paymentService.processPayment(paymentDto);
     }
 
+    @DocGetPaymentByInvoice
     @GetMapping(value = "/{invoiceNumber}", produces = APPLICATION_JSON_VALUE)
     public PaymentDto getPaymentByInvoiceNumber(@PathVariable @NotBlank String invoiceNumber) {
         return paymentService.findPaymentByInvoice(invoiceNumber);
@@ -61,8 +68,8 @@ public class PaymentController {
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(PaymentNotFoundException.class)
-    public PaymentProcessingResultDto handlePaymentNotFoundException(PaymentNotFoundException e) {
-        return PaymentProcessingResultDto.failed(e.getMessage());
+    public ApiErrorResponseDto handlePaymentNotFoundException(PaymentNotFoundException e) {
+        return new ApiErrorResponseDto(e.getMessage());
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)
