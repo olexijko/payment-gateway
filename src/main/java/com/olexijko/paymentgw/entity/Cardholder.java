@@ -21,7 +21,7 @@ public class Cardholder {
     @GeneratedValue
     private Long id;
 
-    private String fullName;
+    private String name;
 
     private String email;
 }

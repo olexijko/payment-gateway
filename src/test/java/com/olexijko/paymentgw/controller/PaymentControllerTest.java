@@ -5,7 +5,7 @@ import java.util.Map;
 import com.olexijko.paymentgw.dto.CardDto;
 import com.olexijko.paymentgw.dto.CardholderDto;
 import com.olexijko.paymentgw.dto.PaymentDto;
-import com.olexijko.paymentgw.dto.PaymentProcessingResponseDto;
+import com.olexijko.paymentgw.dto.PaymentProcessingResultDto;
 import com.olexijko.paymentgw.exception.PaymentNotFoundException;
 import com.olexijko.paymentgw.service.PaymentService;
 import org.json.JSONObject;
@@ -39,7 +39,7 @@ class PaymentControllerTest {
 
     @Test
     void processNewPayment_ReturnsApproved_WhenValidDataIsSent() throws Exception {
-        Mockito.when(paymentServiceMock.processPayment(ArgumentMatchers.any())).thenReturn(PaymentProcessingResponseDto.success());
+        Mockito.when(paymentServiceMock.processPayment(ArgumentMatchers.any())).thenReturn(PaymentProcessingResultDto.success());
 
         final Map<String, Object> requestBody = Map.of(
                 "invoice", 1234567,

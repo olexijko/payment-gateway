@@ -6,7 +6,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
 import com.olexijko.paymentgw.dto.PaymentDto;
-import com.olexijko.paymentgw.dto.PaymentProcessingResponseDto;
+import com.olexijko.paymentgw.dto.PaymentProcessingResultDto;
 import com.olexijko.paymentgw.exception.DuplicatePaymentException;
 import com.olexijko.paymentgw.exception.PaymentNotFoundException;
 import com.olexijko.paymentgw.service.PaymentService;
@@ -37,7 +37,7 @@ public class PaymentController {
     }
 
     @PostMapping(consumes = APPLICATION_JSON_VALUE, produces = APPLICATION_JSON_VALUE)
-    public PaymentProcessingResponseDto processNewPayment(@RequestBody @Valid PaymentDto paymentDto) {
+    public PaymentProcessingResultDto processNewPayment(@RequestBody @Valid PaymentDto paymentDto) {
         return paymentService.processPayment(paymentDto);
     }
 
@@ -48,7 +48,7 @@ public class PaymentController {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public PaymentProcessingResponseDto handleValidationExceptions(
+    public PaymentProcessingResultDto handleValidationExceptions(
             MethodArgumentNotValidException e) {
         Map<String, String> errors = new LinkedHashMap<>();
         e.getBindingResult().getAllErrors().forEach((error) -> {
@@ -56,18 +56,18 @@ public class PaymentController {
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-        return PaymentProcessingResponseDto.failed(errors);
+        return PaymentProcessingResultDto.failed(errors);
     }
 
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ExceptionHandler(PaymentNotFoundException.class)
-    public PaymentProcessingResponseDto handlePaymentNotFoundException(PaymentNotFoundException e) {
-        return PaymentProcessingResponseDto.failed(e.getMessage());
+    public PaymentProcessingResultDto handlePaymentNotFoundException(PaymentNotFoundException e) {
+        return PaymentProcessingResultDto.failed(e.getMessage());
     }
 
     @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(DuplicatePaymentException.class)
-    public PaymentProcessingResponseDto handleDuplicatePaymentException(DuplicatePaymentException e) {
-        return PaymentProcessingResponseDto.failed(e.getMessage());
+    public PaymentProcessingResultDto handleDuplicatePaymentException(DuplicatePaymentException e) {
+        return PaymentProcessingResultDto.failed(e.getMessage());
     }
 }

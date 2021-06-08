@@ -24,7 +24,7 @@ public class PaymentMapper {
     public Payment toEntityFromDto(PaymentDto dto) {
         return dto == null ? null : Payment.builder()
                 .invoice(dto.getInvoice())
-                .amount(Integer.valueOf(dto.getAmount()))
+                .amount(dto.getAmount() == null ? null : Integer.valueOf(dto.getAmount()))
                 .currency(dto.getCurrency())
                 .card(toCardEntityFromDto(dto.getCard()))
                 .cardholder(toCardholderEntityFromDto(dto.getCardholder()))
@@ -34,7 +34,7 @@ public class PaymentMapper {
     public PaymentDto toDtoFromEntity(Payment entity) {
         return entity == null ? null : PaymentDto.builder()
                 .invoice(entity.getInvoice())
-                .amount(String.valueOf(entity.getAmount()))
+                .amount(entity.getAmount() == null ? null : String.valueOf(entity.getAmount()))
                 .currency(entity.getCurrency())
                 .card(toCardDtoFromEntity(entity.getCard()))
                 .cardholder(toCardholderDtoFromEntity(entity.getCardholder()))
@@ -44,7 +44,7 @@ public class PaymentMapper {
     private CardholderDto toCardholderDtoFromEntity(Cardholder entity) {
         return entity == null ? null : CardholderDto.builder()
                 .email(entity.getEmail())
-                .name(sanitizeEntireValue(encryptor.decrypt(entity.getFullName())))
+                .name(sanitizeEntireValue(encryptor.decrypt(entity.getName())))
                 .build();
     }
 
@@ -69,7 +69,7 @@ public class PaymentMapper {
 
     private Cardholder toCardholderEntityFromDto(CardholderDto dto) {
         return dto == null ? null : Cardholder.builder()
-                .fullName(encryptor.encrypt(dto.getName()))
+                .name(encryptor.encrypt(dto.getName()))
                 .email(dto.getEmail())
                 .build();
     }

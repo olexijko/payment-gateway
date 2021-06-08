@@ -1,7 +1,7 @@
 package com.olexijko.paymentgw.service;
 
 import com.olexijko.paymentgw.dto.PaymentDto;
-import com.olexijko.paymentgw.dto.PaymentProcessingResponseDto;
+import com.olexijko.paymentgw.dto.PaymentProcessingResultDto;
 import com.olexijko.paymentgw.entity.Payment;
 import com.olexijko.paymentgw.exception.DuplicatePaymentException;
 import com.olexijko.paymentgw.exception.PaymentNotFoundException;
@@ -21,7 +21,7 @@ public class PaymentService {
         this.auditSender = auditSender;
     }
 
-    public PaymentProcessingResponseDto processPayment(PaymentDto paymentDto) {
+    public PaymentProcessingResultDto processPayment(PaymentDto paymentDto) {
         //TODO: validation for duplicates may require another approach if search by invoice will not satisfy timing for Payment
         // processing
         if (paymentRepository.findByInvoice(paymentDto.getInvoice()).isPresent()) {
@@ -30,7 +30,7 @@ public class PaymentService {
         }
         final Payment savedPayment = paymentRepository.save(paymentMapper.toEntityFromDto(paymentDto));
         auditSender.sendPayment(paymentMapper.toDtoFromEntity(savedPayment));
-        return PaymentProcessingResponseDto.success();
+        return PaymentProcessingResultDto.success();
     }
 
     public PaymentDto findPaymentByInvoice(String invoice) {
